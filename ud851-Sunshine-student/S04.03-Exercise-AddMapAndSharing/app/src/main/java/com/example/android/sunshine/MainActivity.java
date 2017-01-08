@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -221,8 +222,37 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
             return true;
         }
 
-        // TODO (2) Launch the map when the map menu item is clicked
+        // COMPLETE (2) Launch the map when the map menu item is clicked
+        if(id == R.id.action_open_map){
+            openMap();
+            return true;
+        }
 
+        if(id == R.id.action_share_thoughts){
+            shareThoughts();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openMap(){
+        String address = "1600 Amphitheatre Parkway, CA";
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse("geo:0,0?q=" + address);
+        intent.setData(uri);
+        if(intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    public void shareThoughts(){
+        String thoughts = "thoughts";
+        String mimeType = "text/plain";
+        ShareCompat.IntentBuilder
+                .from(MainActivity.this)
+                .setChooserTitle(getString(R.string.action_share_thoughts))
+                .setType(mimeType)
+                .setText(thoughts)
+                .startChooser();
     }
 }
